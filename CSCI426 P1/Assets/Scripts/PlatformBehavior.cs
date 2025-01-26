@@ -5,6 +5,9 @@ using UnityEngine;
 public class PlatformBehavior : MonoBehaviour
 {
     public float speed = 3;
+    // whether or not this platform can move
+    private bool activated = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,7 +17,17 @@ public class PlatformBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float move = Input.GetAxis("Horizontal");
-        transform.Translate(Vector3.right*move*speed*Time.deltaTime);
+        if (activated && this.tag != "Reset") {
+            float move = Input.GetAxis("Horizontal");
+            transform.Translate(Vector3.right*move*speed*Time.deltaTime);
+        }
+    }
+
+    public void Activate() {
+        activated = true;
+    }
+
+    public void Deactivate() {
+        activated = false;
     }
 }
