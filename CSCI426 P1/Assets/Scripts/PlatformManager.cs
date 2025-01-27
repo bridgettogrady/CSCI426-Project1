@@ -119,7 +119,7 @@ public class PlatformManager : MonoBehaviour
             return "Reset";
         }
         else {
-            int randomIndex = Random.Range(0, 2);
+            int randomIndex = Random.Range(0, 3);
             return tags[randomIndex];
         }
     }
@@ -145,6 +145,8 @@ public class PlatformManager : MonoBehaviour
                     renderer.color = Color.blue;
                     break;
                 case "Left":
+                    renderer.color = Color.yellow;
+                    break;
                 case "Right":
                     renderer.color = Color.green;
                     break;

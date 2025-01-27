@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class Behavior : MonoBehaviour
@@ -15,10 +16,12 @@ public class Behavior : MonoBehaviour
     public AudioSource bounce;
     public AudioSource woosh;
     public AudioSource lose;
+    public AudioSource win;
     private Rigidbody2D rb;
     public Sprite sad;
     private Sprite normal;
     private SpriteRenderer spriteRenderer;
+    public Image tintPanel;
     // Start is called before the first frame update
     void Start()
     {
@@ -56,6 +59,12 @@ public class Behavior : MonoBehaviour
             rb.AddForce(Vector2.right * horzForce, ForceMode2D.Impulse);
             woosh.Play();
         }
+        if (col.gameObject.tag == "Win")
+        {
+            tintPanel.color = new Color(0, 1f, 0, 0.137f);
+            win.Play();
+            Invoke("Reset", 3f);
+        }
         else if (col.gameObject.tag == "Reset")
         {
             Collider2D[] overlappingColliders = Physics2D.OverlapBoxAll(col.transform.position, col.collider.bounds.size, 0);
@@ -71,6 +80,7 @@ public class Behavior : MonoBehaviour
             if (!otherOverlap)
             {
                 spriteRenderer.sprite = sad;
+                tintPanel.color = new Color(1f, 0, 0, 0.255f);
                 lose.Play();
                 Invoke("Reset", 1.5f);
             }
@@ -80,6 +90,7 @@ public class Behavior : MonoBehaviour
 
     private void Reset()
     {
+        tintPanel.color = new Color(1, 1, 1, 0);
         spriteRenderer.sprite = normal;
         transform.position = new Vector3(startX, startY, 1f);
         rb.velocity = Vector3.zero;
