@@ -7,27 +7,30 @@ public class CameraFollow : MonoBehaviour
     public Transform player;
     public float cameraOffsetY = 0.0f;
     public float smoothSpeed = 5.0f;
+    public float topThirdOffset = 0.0f;
+    private float currentCameraY;
 
-    private float initialCameraY;
 
     // Start is called before the first frame update
     void Start()
     {
-        initialCameraY = transform.position.y;
+        currentCameraY = transform.position.y;
     }
 
     void LateUpdate()
     {
-        if (player != null) {
-            // only move if player is below center of screen
-            if (player.position.y < transform.position.y + cameraOffsetY) {
-                Vector3 targetPos = new Vector3(transform.position.x, player.position.y - cameraOffsetY, transform.position.z);
-                transform.position = Vector3.Lerp(transform.position, targetPos, smoothSpeed * Time.deltaTime);
-            }
 
-            // prevent camera from moving up
-            if (transform.position.y > initialCameraY) {
-                transform.position = new Vector3(transform.position.x, initialCameraY, transform.position.z);
+        if (player != null)
+        {
+            // Calculate the target Y position for the camera
+            float targetY = player.position.y - topThirdOffset;
+
+            // Only move the camera down if the player is below the current camera Y
+            if (targetY < currentCameraY)
+            {
+                // Smoothly interpolate the camera to the new position
+                currentCameraY = Mathf.Lerp(currentCameraY, targetY, smoothSpeed * Time.deltaTime);
+                transform.position = new Vector3(transform.position.x, currentCameraY, transform.position.z);
             }
         }
     

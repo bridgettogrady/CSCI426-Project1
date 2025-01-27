@@ -8,6 +8,7 @@ public class PlatformManager : MonoBehaviour
     public GameObject player;
     public GameObject wallPrefab;
     public int startingPlatforms = 5;
+    public int spawnIndex = 3;
     public float platformY = 3.0f;
     public float platformXBoundary = 9.0f;
     public float wallX = 9.0f;
@@ -54,8 +55,15 @@ public class PlatformManager : MonoBehaviour
     void Update()
     {
         // update platforms themselves
-        if (player.transform.position.y < platforms[3].transform.position.y) {
+        if (player.transform.position.y < platforms[spawnIndex].transform.position.y) {
             SpawnPlatform();
+            if (highlightIndex == 0) {
+                ChangeHighlight(highlightIndex + 1);
+            }
+            else {
+                ChangeHighlight(highlightIndex - 1);
+            }
+
             platforms.RemoveAt(0);
         }
 
@@ -75,6 +83,7 @@ public class PlatformManager : MonoBehaviour
 
         // activate/deactivate tagged groups
         string currTag = platforms[highlightIndex].tag;
+        Debug.Log(currTag + " " + highlightIndex);
         foreach (GameObject platform in platforms) {
             PlatformBehavior behavior = platform.GetComponent<PlatformBehavior>();
             if (platform.tag == lastTag) {
@@ -101,14 +110,12 @@ public class PlatformManager : MonoBehaviour
         SpriteRenderer renderer = highlight.GetComponent<SpriteRenderer>();
         renderer.enabled = false;
 
-        if (index != platforms.Count && index != -1) {
+        if (index < platforms.Count && index > -1) {
             highlightIndex = index;
         }
 
         // set renderer to new platform
-        highlight = platforms[highlightIndex].transform.Find("Highlight").gameObject;
-        renderer = highlight.GetComponent<SpriteRenderer>();
-        renderer.enabled = true;
+        HighlightPlatform();
     }
 
     /* I don't want reset platforms to spawn as often so this functions
@@ -133,7 +140,8 @@ public class PlatformManager : MonoBehaviour
             platform.transform.parent = transform;
 
             // assign tag
-            platform.tag = GetRandomTag();
+            // platform.tag = GetRandomTag();
+            platform.tag = "Bounce";
 
             // assign color
             SpriteRenderer renderer = platform.GetComponent<SpriteRenderer>();
