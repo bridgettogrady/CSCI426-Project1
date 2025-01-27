@@ -5,10 +5,17 @@ using UnityEngine;
 public class PlatformManager : MonoBehaviour
 {
     public GameObject platformPrefab; // assign in inspector
-    public int platformCount = 5;
+    public GameObject player;
+    public GameObject wallPrefab;
+    public int startingPlatforms = 5;
     public float platformY = 3.0f;
     public float platformXBoundary = 9.0f;
+    public float wallX = 9.0f;
+    public float wallYSize = 50.0f;
+    public float wallYStart = 30.0f;
+    private int numWalls = 1;
     private List<GameObject> platforms = new List<GameObject>();
+    private int numPlatforms = 0;
     private int highlightIndex = 0;
     private string lastTag;
     private List<string> tags = new List<string>{"Bounce", "Left", "Right"};
@@ -17,38 +24,19 @@ public class PlatformManager : MonoBehaviour
     void Start()
     {
         // instantiate platforms vertically
-        for (int i = 0; i < platformCount; i++) {
-            // get random X
-            float randomX = Random.Range(-platformXBoundary, platformXBoundary);
-
-            GameObject platform = Instantiate(platformPrefab, new Vector3(randomX, -i * platformY, 0.0f), Quaternion.identity);
-            platform.transform.parent = transform;
-
-            // if it's the first platform, can't be a reset
+        for (int i = 0; i < startingPlatforms; i++) {
+            // if it's the first platform, can't be a reset and spawn in middle
             if (i == 0) {
-                platform.tag = tags[Random.Range(0, 2)];
+                GameObject platform = Instantiate(platformPrefab, Vector3.zero, Quaternion.identity);
+                platform.transform.parent = transform;
+                platform.tag = "Bounce";
+                platform.GetComponent<SpriteRenderer>().color = Color.blue;
+                platforms.Add(platform);
+                numPlatforms++;
             }
-            // randomly generate tag number
             else {
-                platform.tag = GetRandomTag();
+                SpawnPlatform();
             }
-
-            // assign color
-            SpriteRenderer renderer = platform.GetComponent<SpriteRenderer>();
-            switch (platform.tag) {
-                case "Reset":
-                    renderer.color = Color.red;
-                    break;
-                case "Bounce":
-                    renderer.color = Color.blue;
-                    break;
-                case "Left":
-                case "Right":
-                    renderer.color = Color.green;
-                    break;
-            }
-
-            platforms.Add(platform);
         }
 
         // highlight first platform, set lastTag, and activate first platform
@@ -65,6 +53,17 @@ public class PlatformManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // update platforms themselves
+        if (player.transform.position.y < platforms[3].transform.position.y) {
+            SpawnPlatform();
+            platforms.RemoveAt(0);
+        }
+
+        // update walls
+        if (player.transform.position.y < wallYStart - (wallYSize * numWalls)) {
+            SpawnWalls();
+        }
+
         // going up
         if (Input.GetKeyDown(KeyCode.W)) {
             ChangeHighlight(highlightIndex - 1);
@@ -76,15 +75,13 @@ public class PlatformManager : MonoBehaviour
 
         // activate/deactivate tagged groups
         string currTag = platforms[highlightIndex].tag;
-        if (currTag != lastTag) {
-            foreach (GameObject platform in platforms) {
-                PlatformBehavior behavior = platform.GetComponent<PlatformBehavior>();
-                if (platform.tag == lastTag) {
-                    behavior.Deactivate();
-                }
-                if (platform.tag == currTag) {
-                    behavior.Activate();
-                }
+        foreach (GameObject platform in platforms) {
+            PlatformBehavior behavior = platform.GetComponent<PlatformBehavior>();
+            if (platform.tag == lastTag) {
+                behavior.Deactivate();
+            }
+            if (platform.tag == currTag) {
+                behavior.Activate();
             }
         }
 
@@ -125,5 +122,41 @@ public class PlatformManager : MonoBehaviour
             int randomIndex = Random.Range(0, 2);
             return tags[randomIndex];
         }
+    }
+
+    private void SpawnPlatform() {
+            // get random X
+            float randomX = Random.Range(-platformXBoundary, platformXBoundary);
+
+            GameObject platform = Instantiate(platformPrefab, new Vector3(randomX, -numPlatforms * platformY, 0.0f), Quaternion.identity);
+            numPlatforms++;
+            platform.transform.parent = transform;
+
+            // assign tag
+            platform.tag = GetRandomTag();
+
+            // assign color
+            SpriteRenderer renderer = platform.GetComponent<SpriteRenderer>();
+            switch (platform.tag) {
+                case "Reset":
+                    renderer.color = Color.red;
+                    break;
+                case "Bounce":
+                    renderer.color = Color.blue;
+                    break;
+                case "Left":
+                case "Right":
+                    renderer.color = Color.green;
+                    break;
+            }
+
+            platforms.Add(platform);
+    }
+
+    private void SpawnWalls() {
+        float newY = -(wallYSize * numWalls);
+        GameObject leftWall = Instantiate(wallPrefab, new Vector3(-wallX, newY, 0.0f), Quaternion.identity);
+        GameObject rightWall = Instantiate (wallPrefab, new Vector3(wallX, newY, 0.0f), Quaternion.identity);
+        numWalls++;
     }
 }

@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Behavior : MonoBehaviour
 {
+    // camera component
+    public GameObject camera;
+
     private float startX;
     private float startY;
     public float upwardForce = 10f;
@@ -79,6 +83,8 @@ public class Behavior : MonoBehaviour
         spriteRenderer.sprite = normal;
         transform.position = new Vector3(startX, startY, 1f);
         rb.velocity = Vector3.zero;
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 
