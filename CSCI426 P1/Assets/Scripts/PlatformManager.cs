@@ -140,8 +140,7 @@ public class PlatformManager : MonoBehaviour
             platform.transform.parent = transform;
 
             // assign tag
-            // platform.tag = GetRandomTag();
-            platform.tag = "Bounce";
+            platform.tag = GetRandomTag();
 
             // assign color
             SpriteRenderer renderer = platform.GetComponent<SpriteRenderer>();
