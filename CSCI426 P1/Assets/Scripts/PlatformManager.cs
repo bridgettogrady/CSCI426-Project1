@@ -83,7 +83,7 @@ public class PlatformManager : MonoBehaviour
 
         // activate/deactivate tagged groups
         string currTag = platforms[highlightIndex].tag;
-        Debug.Log(currTag + " " + highlightIndex);
+        //Debug.Log(currTag + " " + highlightIndex);
         foreach (GameObject platform in platforms) {
             PlatformBehavior behavior = platform.GetComponent<PlatformBehavior>();
             if (platform.tag == lastTag) {

@@ -22,6 +22,11 @@ public class Behavior : MonoBehaviour
     private Sprite normal;
     private SpriteRenderer spriteRenderer;
     public Image tintPanel;
+    private float pulseDuration = 0.2f;
+    private float pulseScale = 1.1f;
+    public GameObject leftArrow;
+    public GameObject rightArrow;
+    private float lifetime = 1f;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +35,7 @@ public class Behavior : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         normal = spriteRenderer.sprite;
+
     }
 
     // Update is called once per frame
@@ -48,14 +54,17 @@ public class Behavior : MonoBehaviour
         {
             rb.AddForce(Vector2.up * upwardForce, ForceMode2D.Impulse);
             bounce.Play();
+            StartCoroutine(PulseEffect(col.gameObject));
         }
         if (col.gameObject.tag == "Left")
         {
+            SpawnLeftArrow(transform.position);
             rb.AddForce(Vector2.left * horzForce, ForceMode2D.Impulse);
             woosh.Play();
         }
         if (col.gameObject.tag == "Right")
         {
+            SpawnRightArrow(transform.position);
             rb.AddForce(Vector2.right * horzForce, ForceMode2D.Impulse);
             woosh.Play();
         }
@@ -98,6 +107,39 @@ public class Behavior : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    IEnumerator PulseEffect(GameObject platform)
+    {
+        Vector3 originalScale = platform.transform.localScale;
+        Vector3 targetScale = originalScale * pulseScale;
+        float elapsedTime = 0f;
+        while (elapsedTime < pulseDuration / 2)
+        {
+            platform.transform.localScale = Vector3.Lerp(originalScale, targetScale, elapsedTime / (pulseDuration / 2));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        platform.transform.localScale = targetScale;
+        elapsedTime = 0f;
+        while (elapsedTime < pulseDuration / 2 )
+        {
+            platform.transform.localScale = Vector3.Lerp(targetScale, originalScale, elapsedTime / (pulseDuration / 2));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        platform.transform.localScale = originalScale;
+    }
+
+    void SpawnLeftArrow(Vector3 pos)
+    {
+        GameObject arrow = Instantiate(leftArrow, pos, Quaternion.identity);
+        Destroy(arrow, lifetime);
+    }
+
+    void SpawnRightArrow(Vector3 pos)
+    {
+        GameObject arrow = Instantiate(rightArrow, pos, Quaternion.identity);
+        Destroy(arrow, lifetime);
+    }
 
 }
 
