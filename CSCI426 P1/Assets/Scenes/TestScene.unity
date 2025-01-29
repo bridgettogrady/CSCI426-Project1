@@ -336,7 +336,7 @@ MonoBehaviour:
   spawnIndex: 3
   platformY: 4
   platformXBoundary: 3.9
-  wallX: 9
+  wallX: 10
   wallYSize: 50
   wallYStart: 30
 --- !u!4 &686771510
@@ -368,7 +368,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8255710909687907670, guid: c3ea9dfcbb82ace4f8ef15bc4c79d2f6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 8255710909687907670, guid: c3ea9dfcbb82ace4f8ef15bc4c79d2f6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -681,7 +681,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8255710909687907670, guid: c3ea9dfcbb82ace4f8ef15bc4c79d2f6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8255710909687907670, guid: c3ea9dfcbb82ace4f8ef15bc4c79d2f6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1062,6 +1062,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 1737421280}
+  bumpAmount: 0.5
+  bumpSpeed: 5
   upwardForce: 7
   horzForce: 10
   bounce: {fileID: 739594802}
