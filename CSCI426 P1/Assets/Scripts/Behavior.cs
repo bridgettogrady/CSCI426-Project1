@@ -8,6 +8,9 @@ public class Behavior : MonoBehaviour
 {
     // camera component
     public GameObject camera;
+    private Vector3 originalCamPos;
+    public float bumpAmount = 0.2f;
+    public float bumpSpeed = 5f;
 
     private float startX;
     private float startY;
@@ -35,6 +38,7 @@ public class Behavior : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         normal = spriteRenderer.sprite;
+        originalCamPos = camera.transform.position;
 
     }
 
@@ -61,12 +65,16 @@ public class Behavior : MonoBehaviour
             SpawnLeftArrow(transform.position);
             rb.AddForce(Vector2.left * horzForce, ForceMode2D.Impulse);
             woosh.Play();
+
+            StartCoroutine(CameraBump(Vector2.right * bumpAmount));
         }
         if (col.gameObject.tag == "Right")
         {
             SpawnRightArrow(transform.position);
             rb.AddForce(Vector2.right * horzForce, ForceMode2D.Impulse);
             woosh.Play();
+
+            StartCoroutine(CameraBump(Vector2.left * bumpAmount));
         }
         if (col.gameObject.tag == "Win")
         {
@@ -139,6 +147,28 @@ public class Behavior : MonoBehaviour
     {
         GameObject arrow = Instantiate(rightArrow, pos, Quaternion.identity);
         Destroy(arrow, lifetime);
+    }
+
+    IEnumerator CameraBump(Vector3 bumpDirection)
+    {
+        Vector3 targetPos = originalCamPos + bumpDirection;
+
+        float elapsedTime = 0f;
+        while (elapsedTime < 0.2f) // Adjust duration as needed
+        {
+            camera.transform.position = Vector3.Lerp(camera.transform.position, targetPos, bumpSpeed * Time.deltaTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Smoothly return to the original position
+        elapsedTime = 0f;
+        while (elapsedTime < 0.2f)
+        {
+            camera.transform.position = Vector3.Lerp(camera.transform.position, originalCamPos, bumpSpeed * Time.deltaTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
     }
 
 }

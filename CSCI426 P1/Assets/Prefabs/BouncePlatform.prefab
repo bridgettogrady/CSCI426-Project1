@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8873794146813930774}
   - component: {fileID: 2792034962897922139}
-  - component: {fileID: 5695685759012880559}
   - component: {fileID: 1026073790330223489}
+  - component: {fileID: 3129623996991614459}
   m_Layer: 0
   m_Name: BouncePlatform
   m_TagString: Bounce
@@ -87,7 +87,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &5695685759012880559
+--- !u!114 &1026073790330223489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4217832700171039921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6af3f33582906c247b10b4c74f866dc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  multiplier: 0.4
+--- !u!61 &3129623996991614459
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -132,19 +146,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &1026073790330223489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4217832700171039921}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6af3f33582906c247b10b4c74f866dc3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 5
 --- !u!1 &5675170387828339001
 GameObject:
   m_ObjectHideFlags: 0
